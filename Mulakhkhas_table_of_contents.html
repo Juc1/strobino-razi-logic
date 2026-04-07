@@ -265,6 +265,7 @@
             right: 0;
             bottom: 0;
             overflow: auto;
+            cursor: grab;
         }
 
         @media (max-width: 768px) {
@@ -872,7 +873,7 @@
         <div class="subtitle">Interactive Table of Contents — Riccardo Strobino | Tufts University | 2026 | CC BY 4.0</div>
     </div>
     <div class="search-bar" id="search-bar">
-        <input type="text" id="search-input" placeholder="Search…" oninput="doSearch()" onkeydown="if(event.key==='Escape'){clearSearch()} else if(event.key==='Enter'){event.preventDefault(); searchNav(event.shiftKey ? -1 : 1)}">
+        <input type="text" id="search-input" placeholder="Search…" oninput="debouncedSearch()" onkeydown="if(event.key==='Escape'){clearSearch()} else if(event.key==='Enter'){event.preventDefault(); searchNav(event.shiftKey ? -1 : 1)}">
         <button id="search-prev" onclick="searchNav(-1)" style="display:none;"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="7,1 3,5 7,9" fill="none" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <span id="search-count"></span>
         <button id="search-next" onclick="searchNav(1)" style="display:none;"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="3,1 7,5 3,9" fill="none" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -903,6 +904,7 @@
             <button onclick="zoomIn()">Zoom In (+)</button>
             <button onclick="zoomOut()">Zoom Out (−)</button>
             <button onclick="resetZoom()">Reset Zoom</button>
+            <button onclick="centerContent()">Centre</button>
             <button onclick="resetView()">Reset View</button>
         </div>
     </div>
@@ -1118,7 +1120,8 @@
                                             children: [
                                                 {
                                                     id: 'maq1-1-6-1',
-                                                    text: '1.1.6.1 [Criticism of the claim that what is said in response to "What is it?" is the more general <i>dhātī</i>',
+                                                    text: '1.1.6.1',
+                                                    desc: '[Criticism of the claim that what is said in response to "What is it?" is the more general <i>dhātī</i>]',
                                                     page: '36',
                                                     class: 'leaf',
                                                 },
@@ -1189,7 +1192,8 @@
                                                 },
                                                 {
                                                     id: 'maq1-1-7-6',
-                                                    text: '1.1.7.6 [A group\'s different interpretation of <i>dhātī</i>]',
+                                                    text: '1.1.7.6',
+                                                    desc: '[A group\'s different interpretation of <i>dhātī</i>]',
                                                     page: '44',
                                                     class: 'leaf',
                                                 },
@@ -1614,7 +1618,8 @@
                                             children: [
                                                 {
                                                     id: 'maq1-2-1-1',
-                                                    text: '1.2.1.1Doubts on the division of definitions',
+                                                    text: '1.2.1.1',
+                                                    desc: 'Doubts on the division of definitions',
                                                     page: '102',
                                                     class: 'leaf',
                                                 },
@@ -2295,14 +2300,14 @@
                                                                                 },
                                                                             ]
                                                                         },
-                                                                        {
-                                                                            id: 'maq2-1-4-6-8',
-                                                                            text: '2.1.1.1.2.4',
-                                                                            desc: 'Considerations relative to the unity or multiplicity of a proposition',
-                                                                            page: '172',
-                                                                            class: 'leaf',
-                                                                        },
                                                                     ]
+                                                                },
+                                                                {
+                                                                    id: 'maq2-1-4-6-8',
+                                                                    text: '2.1.1.1.2.4',
+                                                                    desc: 'Considerations relative to the unity or multiplicity of a proposition',
+                                                                    page: '172',
+                                                                    class: 'leaf',
                                                                 },
                                                             ]
                                                         },
@@ -2754,7 +2759,7 @@
                                                     children: [
                                                         {
                                                             id: 'maq2-1-5-1-1',
-                                                            text: '2.1.2.1',
+                                                            text: '2.1.2.1.1',
                                                             label: 'Mabḥath',
                                                             desc: '[Conditional particles]',
                                                             page: '208',
@@ -2762,7 +2767,7 @@
                                                         },
                                                         {
                                                             id: 'maq2-1-5-1-2',
-                                                            text: '2.1.2.2',
+                                                            text: '2.1.2.1.2',
                                                             label: 'Mabḥath',
                                                             desc: '[Antecedent and consequent]',
                                                             page: '208',
@@ -2770,7 +2775,7 @@
                                                         },
                                                         {
                                                             id: 'maq2-1-5-1-3',
-                                                            text: '2.1.2.3',
+                                                            text: '2.1.2.1.3',
                                                             label: 'Mabḥath',
                                                             desc: 'Implicative conditional proposition',
                                                             term: 'luzūmiyya',
@@ -3490,14 +3495,16 @@
                                             children: [
                                                 {
                                                     id: 'maq2-2-1-1',
-                                                    text: '2.2.1.1 Divisions of proof (<i>ḥujja</i>)',
+                                                    text: '2.2.1.1',
+                                                    desc: 'Divisions of proof (<i>ḥujja</i>)',
                                                     label:'Baḥth',
                                                     page: '241',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-1-2',
-                                                    text: '2.2.1.2 Syllogism',
+                                                    text: '2.2.1.2',
+                                                    desc: 'Syllogism',
                                                     page: '243',
                                                     label:'Baḥth',
                                                     class: 'level-5',
@@ -3512,7 +3519,8 @@
                                                 },
                                                 {
                                                     id: 'maq2-2-1-3',
-                                                    text: '2.2.1.3 Division of syllogism',
+                                                    text: '2.2.1.3',
+                                                    desc: 'Division of syllogism',
                                                     label:'Baḥth',
                                                     page: '248',
                                                     class: 'leaf',
@@ -3714,34 +3722,34 @@
                                             children: [
                                                 {
                                                     id: 'maq2-2-3-1',
-                                                    text: '2.2.6.1',
+                                                    text: '2.2.3.1',
                                                     page: '331',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-2',
-                                                    text: '2.2.6.2',
+                                                    text: '2.2.3.2',
                                             desc: 'Reductio ad absurdum',
                                                     page: '332',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-3',
-                                                    text: '2.2.6.3',
+                                                    text: '2.2.3.3',
                                             desc: 'Conversion and circle',
                                                     page: '334',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-4',
-                                                    text: '2.2.6.4',
+                                                    text: '2.2.3.4',
                                             desc: 'Acquisition of premises',
                                                     page: '334',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-5',
-                                                    text: '2.2.6.5',
+                                                    text: '2.2.3.5',
                                             desc: 'Analysis',
                                                     page: '336',
                                                     class: 'leaf',
@@ -3749,27 +3757,27 @@
                                                 {
                                                     id: 'maq2-2-3-6',
                                                     desc: 'Additional indirect conclusions',
-                                                    text: '2.2.6.6',
+                                                    text: '2.2.3.6',
                                                      page: '337',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-7',
-                                                    text: '2.2.6.7',
+                                                    text: '2.2.3.7',
                                             desc: 'True conclusions from false premises',
                                                     page: '337',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-8',
-                                                    text: '2.2.6.8',
+                                                    text: '2.2.3.8',
                                             desc: 'Induction',
                                                     page: '337',
                                                     class: 'leaf',
                                                 },
                                                 {
                                                     id: 'maq2-2-3-9',
-                                                    text: '2.2.6.9',
+                                                    text: '2.2.3.9',
                                             desc: 'Example',
                                                     page: '338',
                                                     class: 'leaf',
@@ -3795,7 +3803,8 @@
                                         },
                                         {
                                             id: 'maq2-3-2',
-                                            text: '2.3.2 [Principles of demonstration',
+                                            text: '2.3.2',
+                                            desc: '[Principles of demonstration]',
                                             page: '344',
                                             class: 'leaf',
                                         },
@@ -3885,8 +3894,11 @@
         function applyZoom() {
             const mindmap = document.getElementById('mindmap');
             const container = document.getElementById('mindmap-container');
-            const scaledW = 8000 * currentZoom;
-            const scaledH = 12000 * currentZoom;
+            // Use actual content size if available, else fallback
+            const baseW = mindmap.scrollWidth / currentZoom || 8000;
+            const baseH = mindmap.scrollHeight / currentZoom || 12000;
+            const scaledW = baseW * currentZoom;
+            const scaledH = baseH * currentZoom;
             const cw = container.clientWidth;
             const ch = container.clientHeight;
             // Centre the map when it's smaller than the viewport
@@ -4241,21 +4253,32 @@
         }
         
         // Reset view to initial state
+        function centerContent() {
+            const container = document.getElementById('mindmap-container');
+            const nodes = container.querySelectorAll('.node');
+            if (nodes.length === 0) return;
+            const containerRect = container.getBoundingClientRect();
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            nodes.forEach(el => {
+                if (el.style.display === 'none') return;
+                const r = el.getBoundingClientRect();
+                const x = container.scrollLeft + r.left - containerRect.left;
+                const y = container.scrollTop + r.top - containerRect.top;
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x + r.width > maxX) maxX = x + r.width;
+                if (y + r.height > maxY) maxY = y + r.height;
+            });
+            const contentCenterX = (minX + maxX) / 2;
+            const contentCenterY = (minY + maxY) / 2;
+            container.scrollLeft = contentCenterX - containerRect.width / 2;
+            container.scrollTop = contentCenterY - containerRect.height / 2;
+        }
+
         function resetView() {
             expandToLevel(2);
-            // Center the root node in the viewport after layout
             requestAnimationFrame(() => {
-                const container = document.getElementById('mindmap-container');
-                const rootEl = document.getElementById('node-root');
-                if (rootEl) {
-                    const rootRect = rootEl.getBoundingClientRect();
-                    const containerRect = container.getBoundingClientRect();
-                    // Calculate root's position in content space
-                    const rootCenterX = (container.scrollLeft + rootRect.left - containerRect.left) + rootRect.width / 2;
-                    const rootCenterY = (container.scrollTop + rootRect.top - containerRect.top) + rootRect.height / 2;
-                    container.scrollLeft = rootCenterX - containerRect.width / 2;
-                    container.scrollTop = rootCenterY - containerRect.height / 2;
-                }
+                centerContent();
             });
         }
         
@@ -4380,6 +4403,12 @@
         let searchMatchIds = new Set();
         let searchAncestorIds = new Set();
         let searchIndex = -1;
+        let _searchTimer = null;
+
+        function debouncedSearch() {
+            if (_searchTimer) clearTimeout(_searchTimer);
+            _searchTimer = setTimeout(doSearch, 300);
+        }
 
         function doSearch() {
             const q = document.getElementById('search-input').value.trim().toLowerCase();
@@ -4395,12 +4424,20 @@
             searchAncestorIds = new Set();
             collectAncestorIds(mindmapData, searchMatchIds, searchAncestorIds);
 
-            // Expand all ancestors so matches are visible
-            searchAncestorIds.forEach(id => delete nodeStates[id]);
-            render();
-
-            // Apply highlights after render
-            applySearchHighlights();
+            // Expand ancestors only if needed — avoid re-render when tree state hasn't changed
+            let needsRender = false;
+            searchAncestorIds.forEach(id => {
+                if (nodeStates[id] === 'collapsed') {
+                    delete nodeStates[id];
+                    needsRender = true;
+                }
+            });
+            if (needsRender) {
+                render();
+                // applySearchHighlights is called at the end of render() via setTimeout
+            } else {
+                applySearchHighlights();
+            }
 
             const count = searchMatches.length;
             if (count === 0) {
@@ -4503,6 +4540,37 @@
                 e.preventDefault();
             });
         }
+
+        // ── Drag-to-pan ─────────────────────────────────────────────────────
+        (function() {
+            const container = document.getElementById('mindmap-container');
+            let dragging = false, startX, startY, scrollL, scrollT;
+
+            container.addEventListener('mousedown', e => {
+                // Only pan if clicking on empty canvas, not on a node
+                if (e.target.closest('.node')) return;
+                dragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                scrollL = container.scrollLeft;
+                scrollT = container.scrollTop;
+                container.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', e => {
+                if (!dragging) return;
+                container.scrollLeft = scrollL - (e.clientX - startX);
+                container.scrollTop  = scrollT - (e.clientY - startY);
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (dragging) {
+                    dragging = false;
+                    container.style.cursor = '';
+                }
+            });
+        })();
 
         // ── Initialize ───────────────────────────────────────────────────────
         window.addEventListener('load', () => {
