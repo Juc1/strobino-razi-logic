@@ -12,10 +12,10 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '18'
 
@@ -25,23 +25,21 @@ jobs:
 
       - name: Upload Artifacts for Review
         # This allows you to see/download the split files directly on GitHub
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: drupal-assets
           path: dist/
 
       - name: Deploy to Drupal Server
-        # Using a highly reliable and widely used SFTP action
-        uses: pressidium/sftp-upload@v1.1.0
+        # Using appleboy/scp-action: a industry standard for SSH/SFTP transfers
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.SFTP_SERVER }}
+          host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
-          # The Private Key secret
-          ssh_private_key: ${{ secrets.SFTP_SSH_KEY }}
-          # Local folder to upload
-          local_path: 'dist'
-          # Absolute path on Cloudways
-          remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
-          # Use Port 22 for SFTP
+          key: ${{ secrets.SFTP_SSH_KEY }}
           port: 22
+          source: "dist/*"
+          target: "/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist"
+          # This removes the 'dist/' prefix so files land directly in the target folder
+          strip_components: 1
 
