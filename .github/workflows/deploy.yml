@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      ACTIONS_STEP_DEBUG: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -29,14 +28,20 @@ jobs:
           path: dist/
 
       - name: Deploy to Drupal Server
-        # Using appleboy/scp-action
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SFTP_SERVER }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          key: ${{ secrets.SFTP_SSH_KEY }}
-          port: 22
-          # Use just 'dist' as the source
-          source: "dist"
-          # Target the theme folder (the action will put 'dist' inside it)
-          target: "/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna"
+        env:
+          SSH_KEY: ${{ secrets.SFTP_SSH_KEY }}
+          HOST: ${{ secrets.SFTP_SERVER }}
+          USER: ${{ secrets.SFTP_USERNAME }}
+        run: |
+          # 1. Prepare SSH directory and key
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # 2. Use native scp to push the contents of dist/
+          # -v provides verbose output so we can see exactly what's happening
+          # -o StrictHostKeyChecking=no skips the host verification prompt
+          scp -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa dist/* "$USER"@"$HOST":/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist/
+          
+          # 3. Clean up the key from the runner
+          rm ~/.ssh/id_rsa
