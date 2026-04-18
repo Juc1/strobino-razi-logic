@@ -1,0 +1,43 @@
+name: Split and Deploy to Drupal
+
+on:
+  push:
+    branches: [ main ]  # Automatically runs when you push to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run Splitter Script
+        # This executes the splitter.js file you just uploaded
+        run: node splitter.js
+
+      - name: Upload Artifacts for Review
+        # This allows you to see/download the split files directly on GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: drupal-assets
+          path: dist/
+
+      - name: Deploy to Drupal Server
+        # This pushes the files from the 'dist' folder to your server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local-dir: ./dist/
+          # Path on your server. Adjusted for what looks like a typical Cloudways/Drupal path
+          server-dir: public_html/web/themes/avicenna/dist/
+          # Set to true if you want to see exactly what files are being moved
+          dry-run: false
+          # Increase timeout for connection issues
+          timeout: 60000 
