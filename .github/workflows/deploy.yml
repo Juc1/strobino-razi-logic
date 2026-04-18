@@ -21,27 +21,18 @@ jobs:
       - name: Run Splitter Script
         run: node splitter.js
 
-      - name: Upload Artifacts for Review
-        uses: actions/upload-artifact@v7
-        with:
-          name: drupal-assets
-          path: dist/
-
       - name: Deploy to Drupal Server
         env:
           SSH_KEY: ${{ secrets.SFTP_SSH_KEY }}
           HOST: ${{ secrets.SFTP_SERVER }}
           USER: ${{ secrets.SFTP_USERNAME }}
         run: |
-          # 1. Prepare SSH directory and key
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           
-          # 2. Use native scp to push the contents of dist/
-          # -v provides verbose output so we can see exactly what's happening
-          # -o StrictHostKeyChecking=no skips the host verification prompt
-          scp -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa dist/* "$USER"@"$HOST":/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist/
+          # Using relative path from home directory (safer on Cloudways)
+          # Removed the trailing slash to prevent mkdir conflicts
+          scp -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa dist/* "$USER"@"$HOST":public_html/web/themes/avicenna/dist/
           
-          # 3. Clean up the key from the runner
           rm ~/.ssh/id_rsa
