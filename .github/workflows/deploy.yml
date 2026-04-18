@@ -29,13 +29,14 @@ jobs:
           path: dist/
 
       - name: Deploy to Drupal Server
-        # THIS IS THE KEY CHANGE: switching from FTP to SCP/SFTP
+        # Using appleboy/scp-action
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SFTP_SSH_KEY }}
           port: 22
-          source: "dist/*"
-          target: "/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist"
-          strip_components: 1
+          # Use just 'dist' as the source
+          source: "dist"
+          # Target the theme folder (the action will put 'dist' inside it)
+          target: "/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna"
