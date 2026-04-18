@@ -36,20 +36,20 @@ try {
     if (scriptMatch) {
         const fullScript = scriptMatch[1];
         
-        // Extract mindmapData specifically
+        // Extract mindmapData specifically for the JSON file (for Drupal to use)
         const dataMatch = fullScript.match(/const mindmapData = ({[\s\S]*?});/);
         if (dataMatch) {
             fs.writeFileSync(path.join(outputDir, 'data.json'), dataMatch[1].trim());
             console.log(' - Created data.json');
-            
-            // The logic is everything else in that script tag
-            const logicJs = fullScript.replace(/const mindmapData = {[\s\S]*?};/, '// mindmapData placeholder');
-            fs.writeFileSync(path.join(outputDir, 'riccardo-github.js'), logicJs.trim());
-            console.log(' - Created riccardo-github.js');
         }
+
+        // We KEEP the full script (including the data) in the riccardo-github.js file
+        // so the visualization logic has immediate access to its data.
+        fs.writeFileSync(path.join(outputDir, 'riccardo-github.js'), fullScript.trim());
+        console.log(' - Created riccardo-github.js');
     }
 
-    // 3. Create the HTML Fragment
+    // 4. Create the HTML Fragment (Body content only, no machinery)
     console.log('Creating HTML Fragment...');
     const bodyMatch = html.match(/<body>([\s\S]*?)<\/body>/);
     if (bodyMatch) {
@@ -60,7 +60,13 @@ try {
         console.log(' - Created fragment.html');
     }
 
+    // 5. Create a deployment verification log
+    const timestamp = new Date().toISOString();
+    fs.writeFileSync(path.join(outputDir, 'successful-deployment.txt'), 'Successful deployment from GitHub at ' + timestamp);
+    console.log(' - Created successful-deployment.txt');
+
     console.log('\nSuccess! Your clean Drupal assets are in the /dist folder.');
+
 
 } catch (err) {
     console.error('Error processing file:', err.message);
