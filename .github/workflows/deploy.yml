@@ -43,3 +43,5 @@ jobs:
           remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
           # This ensures the remote folder is created if it doesn't exist
           sftp_only: true
+          # Community fix for control socket timeout (value in milliseconds)
+          timeout: 190000
