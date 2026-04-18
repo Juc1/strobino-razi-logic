@@ -31,14 +31,17 @@ jobs:
           path: dist/
 
       - name: Deploy to Drupal Server
-        # Using SSH Key authentication for better Cloudways compatibility
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        # Using a highly reliable and widely used SFTP action
+        uses: pressidium/sftp-upload@v1.1.0
         with:
-          username: ${{ secrets.SFTP_USERNAME }}
           server: ${{ secrets.SFTP_SERVER }}
-          # We use the SSH Key instead of the password secret
+          username: ${{ secrets.SFTP_USERNAME }}
+          # The Private Key secret
           ssh_private_key: ${{ secrets.SFTP_SSH_KEY }}
-          port: 22
-          local_path: './dist/*'
+          # Local folder to upload
+          local_path: 'dist'
+          # Absolute path on Cloudways
           remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
-          sftp_only: true
+          # Use Port 22 for SFTP
+          port: 22
+
