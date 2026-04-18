@@ -8,8 +8,8 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      # This silences the Node.js warning by allowing the current versions to run
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      # Opt into Node.js 24 to resolve the deprecation warning
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -42,4 +42,3 @@ jobs:
           local_path: './dist/*'
           remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
           sftp_only: true
-          timeout: 190000
