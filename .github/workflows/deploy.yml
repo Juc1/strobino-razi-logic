@@ -31,18 +31,15 @@ jobs:
           path: dist/
 
       - name: Deploy to Drupal Server
-        # This pushes the files from the 'dist' folder to your server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        # Switching to a dedicated SFTP action
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
+          server: ${{ secrets.SFTP_SERVER }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          protocol: sftp
           port: 22
-          local-dir: ./dist/
-          # Path on your server. Adjusted for what looks like a typical Cloudways/Drupal path
-          server-dir: public_html/web/themes/avicenna/dist/
-          # Set to true if you want to see exactly what files are being moved
-          dry-run: false
-          # Increase timeout for connection issues
-          timeout: 60000 
+          local_path: './dist/*'
+          # Path on Cloudways. Note: Ensure this path is correct for your user
+          remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
+          # This ensures the remote folder is created if it doesn't exist
+          sftp_only: true
