@@ -5,10 +5,10 @@ const path = require('path');
  * Splitter Script for Mulakhkhas Interactive Mindmap
  * 
  * This script takes a single-file HTML "blob" and splits it into:
- * 1. mulakhkhas.css (Extracted styles)
- * 2. mulakhkhas.js  (Extracted logic)
- * 3. data.json      (Extracted mindmapData object)
- * 4. fragment.html  (Clean HTML body for Drupal embedding)
+ * 1. riccardo-github.css (Extracted styles)
+ * 2. riccardo-github.js  (Extracted logic)
+ * 3. data.json           (Extracted mindmapData object)
+ * 4. fragment.html       (Clean HTML body for Drupal embedding)
  */
 
 const inputFile = 'index.html'; 
@@ -21,40 +21,35 @@ if (!fs.existsSync(outputDir)) {
 try {
     const html = fs.readFileSync(inputFile, 'utf8');
 
-    // 1. Extract CSS from <style> tags
+    // 1. Extract CSS
     console.log('Extracting CSS...');
     const cssMatch = html.match(/<style>([\s\S]*?)<\/style>/);
     if (cssMatch) {
-        fs.writeFileSync(path.join(outputDir, 'mulakhkhas.css'), cssMatch[1].trim());
-        console.log(' - Created mulakhkhas.css');
+        fs.writeFileSync(path.join(outputDir, 'riccardo-github.css'), cssMatch[1].trim());
+        console.log(' - Created riccardo-github.css');
     }
 
-    // 2. Extract mindmapData and convert to clean JSON
-    console.log('Extracting Data...');
-    const dataMatch = html.match(/const mindmapData = ({[\s\S]*?});/);
-    if (dataMatch) {
-        // We trim and ensure it's a valid object structure before saving
-        fs.writeFileSync(path.join(outputDir, 'data.json'), dataMatch[1].trim());
-        console.log(' - Created data.json');
-    }
-
-    // 3. Extract JS Logic (scripts that don't contain the massive data blob)
-    console.log('Extracting JS Logic...');
-    const scripts = html.match(/<script>([\s\S]*?)<\/script>/g) || [];
-    let logicJs = '';
-    scripts.forEach(s => {
-        const content = s.replace(/<\/?script>/g, '');
-        // Skip the script that contains the data to keep logic separate
-        if (!content.includes('mindmapData')) {
-            logicJs += content.trim() + '\n\n';
+    // 2. Extract JS and Split Data from Logic
+    console.log('Extracting scripts...');
+    const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
+    
+    if (scriptMatch) {
+        const fullScript = scriptMatch[1];
+        
+        // Extract mindmapData specifically
+        const dataMatch = fullScript.match(/const mindmapData = ({[\s\S]*?});/);
+        if (dataMatch) {
+            fs.writeFileSync(path.join(outputDir, 'data.json'), dataMatch[1].trim());
+            console.log(' - Created data.json');
+            
+            // The logic is everything else in that script tag
+            const logicJs = fullScript.replace(/const mindmapData = {[\s\S]*?};/, '// mindmapData placeholder');
+            fs.writeFileSync(path.join(outputDir, 'riccardo-github.js'), logicJs.trim());
+            console.log(' - Created riccardo-github.js');
         }
-    });
-    if (logicJs) {
-        fs.writeFileSync(path.join(outputDir, 'mulakhkhas.js'), logicJs);
-        console.log(' - Created mulakhkhas.js');
     }
 
-    // 4. Create the HTML Fragment (Body content only, no machinery)
+    // 3. Create the HTML Fragment
     console.log('Creating HTML Fragment...');
     const bodyMatch = html.match(/<body>([\s\S]*?)<\/body>/);
     if (bodyMatch) {

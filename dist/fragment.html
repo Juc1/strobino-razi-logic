@@ -1,0 +1,73 @@
+<div class="header">
+        <h1>Fakhr ad-Dīn ar-Rāzī, <em>Manṭiq al-Mulakhkhaṣ</em></h1>
+        <div class="byline byline-full">A. Qarāmalkī and A. Ashgarīnizhād (eds.), Tehran: Intishārāt Dānišgāh-i Imām Ṣādiq, 2002</div>
+        <div class="byline byline-short">ed. Qarāmalkī and Ashgarīnizhād, Tehran, 2002</div>
+        <div class="subtitle">Interactive Table of Contents — Riccardo Strobino | Tufts University | 2026 | CC BY 4.0 | <a href="https://heirsofavicenna.net" style="color: inherit; text-decoration: none; opacity: 0.7;">Heirs of Avicenna</a></div>
+    </div>
+    <div class="search-bar" id="search-bar">
+        <input type="text" id="search-input" placeholder="Search…" oninput="debouncedSearch()" onkeydown="if(event.key==='Escape'){clearSearch()} else if(event.key==='Enter'){event.preventDefault(); searchNav(event.shiftKey ? -1 : 1)}">
+        <button id="search-prev" onclick="searchNav(-1)" style="display:none;"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="7,1 3,5 7,9" fill="none" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <span id="search-count"></span>
+        <button id="search-next" onclick="searchNav(1)" style="display:none;"><svg width="10" height="10" viewBox="0 0 10 10"><polyline points="3,1 7,5 3,9" fill="none" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button onclick="clearSearch()"><svg width="10" height="10" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="2" y2="8" stroke="#dce6f3" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div id="zoom-overlay" class="zoom-overlay" aria-hidden="true">
+        <div class="zoom-stage">
+            <button class="zoom-close" type="button" onclick="closeZoom()" aria-label="Close enlarged table"></button>
+            <img id="zoom-image" alt="Enlarged supplementary table">
+            <div id="zoom-caption" class="zoom-caption"></div>
+        </div>
+    </div>
+    
+    <div class="controls" id="controls-panel">
+        <div class="panel-header" id="controls-handle">
+            <span>Controls</span>
+            <button class="panel-toggle" onclick="togglePanel('controls-panel')" title="Collapse / expand">▾</button>
+        </div>
+        <div class="controls-body">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.1); width:100%;">
+                <span style="color:#dce6f3; font-size:12px; white-space:nowrap;">Depth</span>
+                <input type="range" id="depth-slider" min="1" max="14" value="3" style="flex:1; cursor:pointer;" oninput="document.getElementById('depth-val').textContent=this.value" onchange="expandToLevel(parseInt(this.value))">
+                <span id="depth-val" style="color:#dce6f3; font-size:12px; min-width:16px;">3</span>
+            </div>
+            <button onclick="expandAll()">Expand All</button>
+            <button onclick="collapseAll()">Collapse All</button>
+            <button onclick="fitToScreen()">Fit to Screen</button>
+            <button onclick="zoomIn()">Zoom In (+)</button>
+            <button onclick="zoomOut()">Zoom Out (−)</button>
+            <button onclick="resetZoom()">Reset Zoom</button>
+            <button onclick="centerContent()">Centre</button>
+            <button onclick="resetView()">Reset View</button>
+        </div>
+    </div>
+    
+    <div class="instructions" id="instructions-panel">
+        <div class="panel-header" id="instructions-handle">
+            <span>💡 Navigation</span>
+            <button class="panel-toggle" onclick="togglePanel('instructions-panel')" title="Collapse / expand">▾</button>
+        </div>
+        <div class="instructions-body">
+            Click nodes to expand/collapse. Use the <strong>Depth slider</strong> to control how many levels are visible. Use <strong>Ctrl+Scroll</strong> (or <strong>⌘+Scroll</strong> on Mac) to zoom. Scroll or drag to pan.
+        </div>
+    </div>
+    
+    <div id="mobile-view"></div>
+    <div id="mindmap-container">
+        <div id="mindmap">
+            <svg id="connections"></svg>
+        </div>
+    </div>
+    
+
+    <div id="popup-overlay" class="popup-overlay" aria-hidden="true">
+        <div class="popup-modal" role="dialog" aria-modal="true" aria-labelledby="popup-title" aria-describedby="popup-subtitle">
+            <div class="popup-header">
+                <div class="popup-header-meta">
+                    <div id="popup-title" class="popup-title">Supplementary material</div>
+                    <div id="popup-subtitle" class="popup-subtitle">Tables and diagrams</div>
+                </div>
+                <button class="popup-close" type="button" onclick="closePopup()" aria-label="Close supplementary panel"></button>
+            </div>
+            <div id="popup-body" class="popup-body"></div>
+        </div>
+    </div>
