@@ -31,17 +31,15 @@ jobs:
           path: dist/
 
       - name: Deploy to Drupal Server
-        # Switching to a dedicated SFTP action
+        # Using SSH Key authentication for better Cloudways compatibility
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: ${{ secrets.SFTP_USERNAME }}
           server: ${{ secrets.SFTP_SERVER }}
-          password: ${{ secrets.SFTP_PASSWORD }}
+          # We use the SSH Key instead of the password secret
+          ssh_private_key: ${{ secrets.SFTP_SSH_KEY }}
           port: 22
           local_path: './dist/*'
-          # Path on Cloudways. Note: Ensure this path is correct for your user
           remote_path: '/home/819629.cloudwaysapps.com/cebsysunkp/public_html/web/themes/avicenna/dist'
-          # This ensures the remote folder is created if it doesn't exist
           sftp_only: true
-          # Community fix for control socket timeout (value in milliseconds)
           timeout: 190000
