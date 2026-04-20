@@ -38,6 +38,6 @@ jobs:
           scp -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa dist/* "$USER"@"$HOST":public_html/web/themes/avicenna/dist/
           
           # Flush Drupal caches and log the deployment
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa "$USER"@"$HOST" "cd public_html && ./vendor/bin/drush cr && ./vendor/bin/drush wd-log 'web/themes/avicenna/dist updated via GitHub Action' --type='deploy'"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa "$USER"@"$HOST" "cd public_html && ./vendor/bin/drush cr && ./vendor/bin/drush php:eval \"\Drupal::logger('deploy')->info('web/themes/avicenna/dist updated via GitHub Action');\""
           
           rm ~/.ssh/id_rsa
