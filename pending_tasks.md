@@ -21,4 +21,3 @@
 7. ~~CSS class normalisation~~ — DONE (depth-based classes computed at render time, depths 0–14 styled)
 
 8. ~~Level button labels~~ — DONE (replaced with depth slider; header restructured with full bibliographic reference)
-Testing updated SFTP_SSH_KEY secret with PEM format
