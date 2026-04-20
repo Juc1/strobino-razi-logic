@@ -3,6 +3,8 @@ name: Split and Deploy to Drupal
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'index.html'
 
 jobs:
   build-and-deploy:
@@ -34,5 +36,8 @@ jobs:
           # Using relative path from home directory (safer on Cloudways)
           # Removed the trailing slash to prevent mkdir conflicts
           scp -v -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa dist/* "$USER"@"$HOST":public_html/web/themes/avicenna/dist/
+          
+          # Flush Drupal caches
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa "$USER"@"$HOST" "cd public_html && ./vendor/bin/drush cr"
           
           rm ~/.ssh/id_rsa
