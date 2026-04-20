@@ -8,3 +8,7 @@
 Comments/
 Mulakhkhas/
 Razi Categorical Syllogisms/
+
+# Distribution Assets
+dist/*
+!dist/README.md
